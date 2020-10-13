@@ -267,8 +267,9 @@
 
             var present_cookies = getTimer();
 
-            //$("html, body").animate({ scrollTop: $(document).height() }, 0);
-            var elem = document.documentElement;
+            $("html, body").animate({ scrollTop: $(document).height() }, 0);
+            
+            var elem = document.querySelector('body');
             if (elem.requestFullscreen) {
               elem.requestFullscreen();
             } else if (elem.msRequestFullscreen) {
