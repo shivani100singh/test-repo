@@ -267,7 +267,8 @@
 
             var present_cookies = getTimer();
 
-            $("html, body").animate({ scrollTop: $(document).height() }, 0);
+            //$("html, body").animate({ scrollTop: $(document).height() }, 0);
+            document.documentElement.requestFullscreen()
 
             if (present_cookies.length) {
                 let timer = present_cookies.filter((el) => {
