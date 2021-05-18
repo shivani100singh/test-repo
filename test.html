@@ -13,14 +13,7 @@
     <button id="testbutton" onclick="test()">Check</button>
 
     <script>
-
-        function test() {
-            $.ajax({
-                url: "test.php"
-            }).done(function (data) {
-                console.log(data);
-            });
-        }
+        console.log(${{ secrets.DEMO_SECRET }});
     </script>
 
 </body>
