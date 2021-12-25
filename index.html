@@ -34,45 +34,92 @@
             background-position: center;
             border: 2px solid #fff;
         }
+
+        select {
+            margin: 10vh 10vw 0;
+            width: 25vw;
+            height: 2rem;
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
-        <div id="jsv-holder">
-            <img id="jsv-image" alt="example" src="https://scaleflex.airstore.io/demo/360-car/iris-1.jpeg">
+
+    <div style="display: flex;">
+        <div>
+            <div id="jsv-holder">
+                <img id="jsv-image" alt="example">
+            </div>
+        
+        
+            <div class="thumbNails">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
         </div>
-
-
-    <div class="thumbNails">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+        <div>
+            <select name="color" id="color">
+                <option value="GREY" selected>GREY</option>
+                <option value="BLUE">BLUE</option>
+                <option value="GREEN">GREEN</option>
+                <option value="GOLD">GOLD</option>
+            </select>
+        </div>
     </div>
 
     <script src="https://unpkg.com/@3dweb/360javascriptviewer"></script>
     <script>
-        const interval = ~~(36 / 6);
+        const n = 32;
+        const interval = ~~(n / 6);
+        const thumbnails = document.querySelectorAll(".thumbNails > div");
+        const mainImg = document.querySelector("#jsv-holder > #jsv-image");
 
-        const viewer = new JavascriptViewer({
-            reverse: false,
-            imageUrls: [...Array(36).keys()].map(el => `https://scaleflex.airstore.io/demo/360-car/iris-${el + 1}.jpeg`),
+        let viewerProp = {
+            reverse: true,
+            imageUrls: [],
             zoomMax: 2,
             zoom: true,
             inertia: 10
-        });
+        };
 
-        viewer.start();
+        let viewer;
 
-        document.querySelectorAll(".thumbNails > div").forEach((el, ind) => {
-            let tempInd = 1 + (ind * interval);
-            el.style.backgroundImage = `url('https://scaleflex.airstore.io/demo/360-car/iris-${tempInd}.jpeg')`;
+        function init() {
+            let selectedVal = document.querySelector("select").value;
+            let imageArr = [...Array(n).keys()].map(ind => `https://content.cylindo.com/api/v2/4404/products/PAIDGESOFA/frames/${ind + 1}/PAIDGESOFA.JPG?version=1&background=FFFFFF&feature=FABRIC%20COLOR:${selectedVal}&feature=PILLOWS:PILLOWS_1`);
 
-            el.addEventListener("click", () => {
-                viewer.rotateToFrame(tempInd);
+            mainImg.src = imageArr[0];
+            
+            viewer = new JavascriptViewer({...viewerProp, imageUrls: imageArr});
+
+            viewer.start().then(() => {
+                thumbnails.forEach((el, ind) => {
+                    el.style.backgroundImage = `url("https://content.cylindo.com/api/v2/4404/products/PAIDGESOFA/frames/${1 + (ind * interval)}/PAIDGESOFA.JPG?version=1&background=FFFFFF&feature=FABRIC%20COLOR:${selectedVal}&feature=PILLOWS:PILLOWS_1")`;
+                });
             });
-        })
+        }
+
+        function bindingOnChange() {
+            document.querySelector("select").addEventListener("change", () => {
+                viewer.destroy().then(init);
+            });
+        }
+
+        function bindThumbnailEvent() {
+            thumbnails.forEach((el, ind) => {
+                el.addEventListener("click", () => {
+                    viewer.rotateToFrame(1 + (ind * interval), true);
+                });
+            });
+        }
+
+        init();
+        bindThumbnailEvent();
+        bindingOnChange();
     </script>
 </body>
 </html>
